@@ -2,8 +2,11 @@
 
 namespace App\Exceptions;
 
+use App\Common\Controllers\ApiController;
 use Exception;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Prophecy\Exception\Doubler\MethodNotFoundException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class Handler extends ExceptionHandler
 {
@@ -48,6 +51,10 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $exception)
     {
+        // Global error handling
+        if($exception instanceof NotFoundHttpException){
+            return (app()->make('App\Common\Controllers\ApiController'))->notOk([], "Page not found", 404);
+        }
         return parent::render($request, $exception);
     }
 }

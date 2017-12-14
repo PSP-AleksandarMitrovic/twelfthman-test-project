@@ -2,7 +2,10 @@
 
 namespace App\Providers;
 
+use App\Modules\FileSystem\Contracts\FileSystemResourceContract;
+use App\Modules\FileSystem\Services\FileSystemResourceLocal;
 use Illuminate\Support\ServiceProvider;
+use Schema;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -13,7 +16,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        Schema::defaultStringLength(191);
     }
 
     /**
@@ -23,6 +26,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+       //
     }
 }

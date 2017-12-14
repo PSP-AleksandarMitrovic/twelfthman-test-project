@@ -8,32 +8,55 @@
 
 namespace App\Modules\FileSystem\Controllers;
 
-use App\Http\Controllers\Controller;
+use App\Common\Controllers\ApiController;
+use App\Modules\FileSystem\Contracts\FileSystemResourceContract;
+use Illuminate\Contracts\Filesystem\FileNotFoundException;
+use Illuminate\Http\Request;
+use RuntimeException;
+use Exception;
 
-class ResourceController extends Controller
+/**
+ * Class ResourceController
+ * @package App\Modules\FileSystem\Controllers
+ * @property FileSystemResourceContract $fileSystem
+ */
+class ResourceController extends ApiController
 {
-    public function index()
-    {
+    /**
+     * @var FileSystemResourceContract
+     */
+    private $fileSystem;
 
+    /**
+     * ResourceController constructor.
+     * @param FileSystemResourceContract $fileSystem
+     */
+    public function __construct(FileSystemResourceContract $fileSystem)
+    {
+        $this->fileSystem = $fileSystem;
     }
 
-    public function show()
+    public function show(Request $request, $folderName, $fileName)
     {
-
+        try {
+            return $this->fileSystem->get($request, $folderName, $fileName);
+        }catch(FileNotFoundException $e){
+            return $this->notOk([], $e->getMessage(), 404);
+        }catch (Exception $e) {
+            return $this->notOk([], $e->getMessage(), 500);
+        }
     }
 
-    public function store()
+    public function store(Request $request, $folderName, $fileName)
     {
+        try {
 
-    }
+            $this->fileSystem->put($request, $folderName, $fileName);
 
-    public function update()
-    {
-
-    }
-
-    public function destroy()
-    {
-
+        } catch (RuntimeException $e) {
+            return $this->notOk([], $e->getMessage(),400);
+        } catch(Exception $e){
+            return $this->notOk([], $e->getMessage(),500);
+        }
     }
 }

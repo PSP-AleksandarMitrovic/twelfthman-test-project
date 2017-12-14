@@ -8,8 +8,35 @@
 
 namespace App\Modules\FileSystem\Contracts;
 
+use Illuminate\Http\Request;
 
 interface FileSystemResourceContract
 {
+    /**
+     * Return specific file
+     *
+     * @param Request $request
+     * @param $bucket
+     * @param $fileName
+     * @return mixed
+     */
+    public function get(Request $request, $bucket, $fileName);
 
+    /**
+     * Store file
+     *
+     * @param Request $request
+     * @param $bucket
+     * @param $fileName
+     * @return mixed
+     */
+    public function put(Request $request, $bucket, $fileName);
+
+    /**
+     * Set storage disk
+     *
+     * @param string $bucket
+     * @return mixed
+     */
+    public function setDisk($bucket = '');
 }
