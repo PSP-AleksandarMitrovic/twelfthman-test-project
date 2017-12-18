@@ -12,7 +12,6 @@ use App\Common\Controllers\ApiController;
 use App\Http\Requests\ApiGetRequest;
 use App\Modules\Image\Contracts\CUDImageContract;
 use App\Modules\Image\Contracts\ReadImageContract;
-use App\Modules\Image\Requests\UpdateRequest;
 use App\Modules\Image\Validators\ImageValidator;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
@@ -84,7 +83,7 @@ class ResourceController extends ApiController
     }
 
     /**
-     * @param UpdateRequest|Request $request
+     * @param Request $request
      * @param ImageValidator $validator
      * @param $id
      * @return JsonResponse
