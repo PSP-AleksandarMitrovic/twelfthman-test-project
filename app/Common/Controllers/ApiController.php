@@ -10,7 +10,12 @@ namespace App\Common\Controllers;
 
 
 use App\Http\Controllers\Controller;
+use Illuminate\Http\JsonResponse;
 
+/**
+ * Class ApiController
+ * @package App\Common\Controllers
+ */
 class ApiController extends Controller
 {
     /**
@@ -20,7 +25,7 @@ class ApiController extends Controller
      * @param string $message
      * @return \Illuminate\Http\JsonResponse
      */
-    public function ok($data = [], $message = 'Done')
+    public function ok($data = [], $message = 'Done') : JsonResponse
     {
         return $this->response($data, $message);
     }
@@ -34,7 +39,7 @@ class ApiController extends Controller
      * @param bool $status
      * @return \Illuminate\Http\JsonResponse
      */
-    private function response($data, $response_message, $status_code = 200, $status = true)
+    private function response($data, $response_message, $status_code = 200, $status = true) : JsonResponse
     {
         $message['status'] = $status;
 
@@ -57,8 +62,26 @@ class ApiController extends Controller
      * @param integer $code
      * @return \Illuminate\Http\JsonResponse
      */
-    public function notOk($data = [], $message = 'Done', $code)
+    public function notOk($data = [], $message = 'Done', $code) : JsonResponse
     {
         return $this->response($data, $message, $code, false);
+    }
+
+    /**
+     * Calls Response function when user errors occurs
+     *
+     * @param array $data
+     * @param int $code
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function error($data = [], $code = 400) : JsonResponse
+    {
+        $message['status'] = false;
+
+        if (isset($data)) {
+            $message['errors'] = $data;
+        }
+
+        return response()->json($message, $code, [], JSON_NUMERIC_CHECK);
     }
 }

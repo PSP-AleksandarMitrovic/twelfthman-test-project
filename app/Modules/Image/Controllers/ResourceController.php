@@ -12,11 +12,12 @@ use App\Common\Controllers\ApiController;
 use App\Http\Requests\ApiGetRequest;
 use App\Modules\Image\Contracts\CUDImageContract;
 use App\Modules\Image\Contracts\ReadImageContract;
-use App\Modules\Image\Requests\StoreRequest;
 use App\Modules\Image\Requests\UpdateRequest;
+use App\Modules\Image\Validators\ImageValidator;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
 use Exception;
+use Illuminate\Http\Request;
 
 class ResourceController extends ApiController
 {
@@ -62,13 +63,19 @@ class ResourceController extends ApiController
     }
 
     /**
-     * @param StoreRequest $request
-     * @return \Illuminate\Http\JsonResponse
+     * @param Request $request
+     * @param ImageValidator $validator
+     * @return JsonResponse
      */
-    public function store(StoreRequest $request) : JsonResponse
+    public function store(Request $request, ImageValidator $validator): JsonResponse
     {
         try {
             $data = $request->json()->all();
+
+            // Validate against the create ruleset.
+            if (!$validator->validate($data, 'create')) {
+                return $this->error($validator->getErrors());
+            }
 
             return $this->ok($this->db_cud->store($data), "Image created");
         } catch (Exception $e) {
@@ -77,19 +84,25 @@ class ResourceController extends ApiController
     }
 
     /**
-     * @param UpdateRequest $request
+     * @param UpdateRequest|Request $request
+     * @param ImageValidator $validator
      * @param $id
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function update(UpdateRequest $request, $id) : JsonResponse
+    public function update(Request $request, ImageValidator $validator, $id): JsonResponse
     {
         try {
             $data = $request->json()->all();
 
+            // Validate against the update ruleset.
+            if (!$validator->validate($data, 'update')) {
+                return $this->error($validator->getErrors());
+            }
+
             return $this->ok($this->db_cud->update($data, $id), "Image updated");
-        }catch (ModelNotFoundException $e) {
+        } catch (ModelNotFoundException $e) {
             return $this->notOk([], $e->getMessage(), 404);
-        }catch (Exception $e) {
+        } catch (Exception $e) {
             return $this->notOk([], $e->getMessage(), 500);
         }
     }
@@ -98,15 +111,15 @@ class ResourceController extends ApiController
      * @param $id
      * @return \Illuminate\Http\JsonResponse
      */
-    public function delete($id) : JsonResponse
+    public function delete($id): JsonResponse
     {
         try {
             $this->db_cud->delete($id);
 
             return $this->ok([], "Image deleted");
-        }catch (ModelNotFoundException $e) {
+        } catch (ModelNotFoundException $e) {
             return $this->notOk([], $e->getMessage(), 404);
-        }catch (Exception $e) {
+        } catch (Exception $e) {
             return $this->notOk([], $e->getMessage(), 500);
         }
     }
