@@ -277,8 +277,13 @@ abstract class ApiGetService
 
         // We are traversing through all relations
         foreach($relation_loaders as $relation) {
-            $relations [$relation]= function($query) use($relation) {
+            // If our relation is not noted as available for that model
+            // We will skip that relation
+            if(!in_array($relation, $this->builder->getModel()->relationships())){
+                continue;
+            }
 
+            $relations [$relation]= function($query) use($relation) {
                 // And we are binding SELECT fields on each relation
                 if(isset($this->relation_fields[$relation])){
                     $query->select($this->relation_fields[$relation]);

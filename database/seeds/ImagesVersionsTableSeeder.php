@@ -11,7 +11,7 @@ class ImagesVersionsTableSeeder extends Seeder
      */
     public function run()
     {
-            DB::table('images_versions')->insert([
+        DB::table('images_versions')->insert([
             [
                 'image_id' => 1,
                 'type' => 'medium',
@@ -95,6 +95,7 @@ class ImagesVersionsTableSeeder extends Seeder
                 'path' => '6/image-5_T.png',
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s')
-            ]]);
+            ]
+        ]);
     }
 }
