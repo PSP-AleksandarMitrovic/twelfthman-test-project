@@ -16,6 +16,7 @@ class CreateImageVersionsTable extends Migration
         Schema::create('images_versions', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('image_id')->unsigned();
+            $table->string('type', 30);
             $table->string('path')->unique();
             $table->timestamps();
 

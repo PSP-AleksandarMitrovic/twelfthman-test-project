@@ -13,8 +13,11 @@ class EventServiceProvider extends ServiceProvider
      * @var array
      */
     protected $listen = [
-        'App\Events\Event' => [
-            'App\Listeners\EventListener',
+        'App\Modules\FileSystem\Events\MakeResizedImagesEvent' => [
+            'App\Modules\FileSystem\Listeners\MakeResizedImagesListener',
+        ],
+        'App\Modules\FileSystem\Events\SaveResizedImagesEvent' => [
+            'App\Modules\FileSystem\Listeners\SaveResizedImagesListener',
         ],
     ];
 

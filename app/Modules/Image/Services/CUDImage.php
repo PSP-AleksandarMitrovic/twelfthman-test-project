@@ -44,8 +44,14 @@ class CUDImage implements CUDImageContract
         // ... then create versions for that image
         // Paths will have appended _M and _T markers
         $image->versions()->create([
-            ["path" => substr_replace($image->path, "_M", strrpos($image->path, "."), 0)],
-            ["path" => substr_replace($image->path, "_T", strrpos($image->path, "."), 0)]
+            [
+                "type" => "medium",
+                "path" => substr_replace($image->path, "_M", strrpos($image->path, "."), 0)
+            ],
+            [
+                "type" => "thumbnail",
+                "path" => substr_replace($image->path, "_T", strrpos($image->path, "."), 0)
+            ]
         ]);
 
         return $image;

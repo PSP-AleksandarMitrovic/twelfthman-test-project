@@ -326,7 +326,7 @@ abstract class ApiGetService
      */
     protected function getData() : LengthAwarePaginator
     {
-        return $this->builder->paginate($this->api_query["count"] ?? env("PER_PAGE_LISTING"));
+        return $this->builder->paginate($this->api_query["count"] ?? config("api.count_per_page"));
     }
 
     /**

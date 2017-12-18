@@ -9,9 +9,12 @@
 namespace App\Modules\FileSystem\Services;
 
 use App\Modules\FileSystem\Contracts\FileSystemResourceContract;
+use App\Modules\FileSystem\Events\MakeResizedImagesEvent;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Http\Request;
 use Storage;
+use RuntimeException;
+use StdClass;
 
 /**
  * Class FileSystemResourceLocal
@@ -76,7 +79,24 @@ class FileSystemResourceLocal implements FileSystemResourceContract
             throw new RuntimeException("File not uploaded, or is not valid");
         }
 
+        // Set storage disk...
+        $this->setDisk();
 
+        $path = '/' . $folder . '/' .$fileName;
+
+        // ... store file
+        $this->disk->put($path, fopen($request->file('body'), 'r+'));
+
+        // ... and if file is image
+        // fire event to make smaller versions
+        if(strpos($request->file('body')->getMimeType(), "image") !== false)  {
+            $data = new StdClass();
+            $data->file = $request->file('body');
+            // in path for example 1/1.jpg, our folder will be image_id
+            $data->image_id = $folder;
+            $data->filename = $fileName;
+            event(new MakeResizedImagesEvent($data));
+        }
     }
 
     /**

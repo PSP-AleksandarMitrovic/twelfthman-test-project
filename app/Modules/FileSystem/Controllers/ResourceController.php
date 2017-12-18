@@ -49,14 +49,14 @@ class ResourceController extends ApiController
 
     public function store(Request $request, $folderName, $fileName)
     {
-        try {
+        //try {
 
             $this->fileSystem->put($request, $folderName, $fileName);
 
-        } catch (RuntimeException $e) {
-            return $this->notOk([], $e->getMessage(),400);
-        } catch(Exception $e){
-            return $this->notOk([], $e->getMessage(),500);
-        }
+        //} catch (RuntimeException $e) {
+         //   return $this->notOk([], $e->getMessage(),400);
+       // } catch(Exception $e){
+         //   return $this->notOk([], $e->getMessage(),500);
+       // }
     }
 }
